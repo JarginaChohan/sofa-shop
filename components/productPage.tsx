@@ -1,5 +1,5 @@
-// pages/product/[slug].js
 import Image from "next/image";
+import Link from "next/link";
 
 const ProductPage = () => {
   return (
@@ -7,9 +7,9 @@ const ProductPage = () => {
       {/* Breadcrumb */}
       <nav className="text-sm text-gray-500 mb-4">
         <ol className="list-reset flex space-x-2">
-          <li><a href="/" className="hover:text-gray-800">Home</a></li>
+          <li><Link href="/" className="hover:text-gray-800">Home</Link></li>
           <li>/</li>
-          <li><a href="/shop" className="hover:text-gray-800">Shop</a></li>
+          <li><Link href="/shop" className="hover:text-gray-800">Shop</Link></li>
           <li>/</li>
           <li className="text-gray-800">Asgaard Sofa</li>
         </ol>
