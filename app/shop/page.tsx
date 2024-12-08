@@ -1,5 +1,4 @@
 import ShopPage from '@/components/shop'
-import React from 'react'
 
 const Page = () => {
   return (

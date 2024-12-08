@@ -1,6 +1,4 @@
 import Cart from '@/components/cart'
-import Checkout from '@/components/checkout'
-import MyAccount from '@/components/myAccount'
 import Image from 'next/image'
 
 const Page = () => {
