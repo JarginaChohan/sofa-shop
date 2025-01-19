@@ -1,52 +1,61 @@
-import Cart from '@/components/cart'
-import Image from 'next/image'
+"use client";
 
-const Page = () => {
-  return (
-    <div>
-      <div className="relative w-full h-60 bg-cover bg-center" style={{ backgroundImage: 'url("/bg-shop.png")' }}>
-        <div className="absolute inset-0 bg-white bg-opacity-50 flex flex-col justify-center items-center">
-          <Image src="/logo.png" alt="logo" width={100} height={100} className="h-[77px] w-[77px]"/>
-          <h1 className={` text-3xl text-black`}>Cart</h1>
-          <p className={` text-sm text-black`}>
-            Home &gt; Cart
-          </p>
-        </div>
-      </div>
-        <Cart/>
-        <div className="bg-[#fdf6f7] py-12  my-8">
-        <div className=" my-4 max-w-6xl mx-auto  px-4 grid grid-cols-1 md:grid-cols-3 gap-8">
-          {/* Feature 1 */}
-          <div className=" flex flex-col justify-start">
-            <h3 className={` text-lg font-semibold text-black`}>
-              Free Delivery
-            </h3>
-            <p className={` text-sm text-gray-600 mt-1`}>
-              For all orders over $50, consectetur adipiscing elit.
-            </p>
-          </div>
-          {/* Feature 2 */}
-          <div className="flex flex-col justify-start">
-            <h3 className={` text-lg font-semibold text-black`}>
-              90 Days Return
-            </h3>
-            <p className={` text-sm text-gray-600 mt-1`}>
-              If goods have problems, consectetur adipiscing elit.
-            </p>
-          </div>
-          {/* Feature 3 */}
-          <div className="flex flex-col justify-start">
-            <h3 className={` text-lg font-semibold text-black`}>
-              Secure Payment
-            </h3>
-            <p className={` text-sm text-gray-600 mt-1`}>
-              100% secure payment, consectetur adipiscing elit.
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  )
+import React, { useEffect, useState } from "react";
+
+interface CartItem {
+  name: string;
+  imageUrl: string;
+  description: string;
+  quantity: number;
 }
 
-export default Page
+const Cart: React.FC = () => {
+  const [cart, setCart] = useState<CartItem[]>([]);
+
+  useEffect(() => {
+    const storedCart = localStorage.getItem("cart");
+    if (storedCart) {
+      setCart(JSON.parse(storedCart));
+    }
+  }, []);
+
+  const handleRemoveFromCart = (itemName: string) => {
+    const updatedCart = cart.filter((item) => item.name !== itemName);
+    setCart(updatedCart);
+    localStorage.setItem("cart", JSON.stringify(updatedCart));
+  };
+
+  return (
+    <div className="p-6">
+      <h1 className="text-2xl font-semibold mb-4">Your Cart</h1>
+      {cart.length === 0 ? (
+        <p>Your cart is empty.</p>
+      ) : (
+        <ul>
+          {cart.map((item, index) => (
+            <li
+              key={`${item.name}-${index}`} // Unique key using name and index
+              className="flex items-center justify-between border-b py-2"
+            >
+              <div>
+                <h2 className="text-lg font-medium">{item.name}</h2>
+                <p className="text-sm text-gray-600">{item.description}</p>
+              </div>
+              <div className="flex items-center">
+                <p className="mr-4">Qty: {item.quantity}</p>
+                <button
+                  onClick={() => handleRemoveFromCart(item.name)}
+                  className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+                >
+                  Remove
+                </button>
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+};
+
+export default Cart;

@@ -11,6 +11,13 @@ interface Product {
   description: string;
 }
 
+interface CartItem {
+  name: string;
+  imageUrl: string;
+  description: string;
+  quantity: number;
+}
+
 const ProductListFeature: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
 
@@ -27,6 +34,26 @@ const ProductListFeature: React.FC = () => {
       .then((data: Product[]) => setProducts(data))
       .catch((error) => console.error("Error fetching products:", error));
   }, []);
+
+  const addToCart = (product: Product) => {
+    const cartData = localStorage.getItem("cart");
+    const cart: CartItem[] = cartData ? JSON.parse(cartData) : [];
+
+    const existingItemIndex = cart.findIndex((item) => item.name === product.name);
+    if (existingItemIndex !== -1) {
+      // Increase quantity if the item is already in the cart
+      cart[existingItemIndex].quantity += 1;
+    } else {
+      // Add new item to the cart
+      cart.push({
+        ...product,
+        quantity: 1,
+      });
+    }
+
+    localStorage.setItem("cart", JSON.stringify(cart));
+    alert(`${product.name} has been added to the cart!`);
+  };
 
   return (
     <div className="bg-[#FAF4F4] px-6 py-12">
@@ -46,12 +73,12 @@ const ProductListFeature: React.FC = () => {
             <div className="p-6">
               <h2 className="text-lg font-semibold text-gray-800">{product.name}</h2>
               <p className="text-gray-600 mt-2">{product.description}</p>
-              <a
-                href="#"
-                className="text-blue-500 underline hover:text-blue-600 mt-4 inline-block"
+              <button
+                onClick={() => addToCart(product)}
+                className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
               >
-                View More
-              </a>
+                Add to Cart
+              </button>
             </div>
           </div>
         ))}

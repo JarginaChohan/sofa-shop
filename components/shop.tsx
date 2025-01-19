@@ -28,6 +28,14 @@ interface Product {
   imagePath: any; // Sanity's image object
 }
 
+interface CartItem {
+  id: string;
+  name: string;
+  price: string;
+  imageUrl: string;
+  quantity: number;
+}
+
 const ShopPage = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -70,6 +78,29 @@ const ShopPage = () => {
     setCurrentPage(1); // Reset to the first page when items per page changes
   };
 
+  const addToCart = (product: Product) => {
+    const cartData = localStorage.getItem("cart");
+    const cart: CartItem[] = cartData ? JSON.parse(cartData) : [];
+
+    const existingItemIndex = cart.findIndex((item) => item.id === product.id);
+    if (existingItemIndex !== -1) {
+      // Update quantity if the item already exists in the cart
+      cart[existingItemIndex].quantity += 1;
+    } else {
+      // Add new item to the cart
+      cart.push({
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        imageUrl: urlFor(product.imagePath).url(),
+        quantity: 1,
+      });
+    }
+
+    localStorage.setItem("cart", JSON.stringify(cart));
+    alert(`${product.name} has been added to the cart!`);
+  };
+
   return (
     <div className="w-full">
       {/* Banner Section */}
@@ -86,9 +117,7 @@ const ShopPage = () => {
             className="h-[77px] w-[77px]"
           />
           <h1 className={`${poppins5.className} text-3xl text-black`}>Shop</h1>
-          <p className={`${poppins4.className} text-sm text-black`}>
-            Home &gt; Shop
-          </p>
+          <p className={`${poppins4.className} text-sm text-black`}>Home &gt; Shop</p>
         </div>
       </div>
 
@@ -137,8 +166,14 @@ const ShopPage = () => {
                 <Link href={`/shop/product/${product.id}`}>{product.name}</Link>
               </h3>
               <p className="text-start text-[16px] font-semibold">
-                {product.price}
+                ${product.price}
               </p>
+              <button
+                onClick={() => addToCart(product)}
+                className="mt-4 px-4 py-2 bg-black text-white rounded-md"
+              >
+                Add to Cart
+              </button>
             </div>
           </div>
         ))}
