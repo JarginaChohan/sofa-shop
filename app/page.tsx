@@ -4,8 +4,10 @@ import ProductGrid from "@/components/feature";
 import RocketSingleSeater from "@/components/hero";
 import InstagramBanner from "@/components/insta";
 import ProductGridList from "@/components/product";
+import { client } from "@/sanity/lib/client";
 
 export default function Home() {
+  
   return (
     <div className="">
       <RocketSingleSeater/>
